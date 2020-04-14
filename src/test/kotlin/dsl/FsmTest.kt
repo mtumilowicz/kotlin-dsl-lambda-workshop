@@ -1,28 +1,29 @@
 package dsl
 
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.maps.haveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldHave
 
-class FsmTest {
-
-    @Test
-    fun a() {
-//        when:
-        val fsm = Fsm.create(initialState = "locked") {
-            add {
-                on("coin")
-                from("locked")
-                into("unlocked")
+class FsmTest : BehaviorSpec({
+    given("a broomstick") {
+        `when`("I sit on it") {
+            val fsm = Fsm.create(initialState = "locked") {
+                add {
+                    on("coin")
+                    from("locked")
+                    into("unlocked")
+                }
+                add {
+                    on("pass")
+                    from("unlocked")
+                    into("locked")
+                }
             }
-            add {
-                on("pass")
-                from("unlocked")
-                into("locked")
+            then("I should be able to fly") {
+                fsm.initial shouldBe State("locked")
+                fsm.transitions shouldHave haveSize(2)
             }
         }
-
-//        then:
-        Assertions.assertEquals(State("locked"), fsm.initial)
-        Assertions.assertEquals(2, fsm.transitions.size)
     }
-}
+})
