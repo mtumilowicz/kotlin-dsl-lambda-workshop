@@ -1,18 +1,17 @@
 package dsl
 
 class FsmSpec(
-    private val transitions: MutableList<TransitionSpec.() -> TransitionSpec> = mutableListOf(),
+    private val transitions: MutableList<Transition> = mutableListOf(),
     val initialState: String
 ) {
 
     fun add(transitionRecipe: TransitionSpec.() -> TransitionSpec): FsmSpec {
-        transitions.add(transitionRecipe)
+        transitions.add(Transition.create(transitionRecipe))
         return this
     }
 
     fun build(): Fsm {
-        val map = transitions.map { func -> TransitionSpec().func().build() }
-            .associateBy({ it.event }, { it.stateFlow })
+        val map = transitions.associateBy({ it.event }, { it.stateFlow })
         return Fsm(
             transitions = map,
             initial = State(initialState),

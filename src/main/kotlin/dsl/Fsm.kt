@@ -7,10 +7,9 @@ class Fsm(
 ) {
 
     companion object {
-        @JvmStatic
-        fun create(initialState: String, xxx: FsmSpec.() -> FsmSpec): Fsm {
+        fun create(initialState: String, fsmRecipe: FsmSpec.() -> FsmSpec): Fsm {
             return FsmSpec(initialState = initialState)
-                .xxx()
+                .fsmRecipe()
                 .build()
         }
     }
