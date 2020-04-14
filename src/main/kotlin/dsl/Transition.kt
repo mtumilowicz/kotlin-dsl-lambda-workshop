@@ -3,9 +3,8 @@ package dsl
 data class Transition(val event: Event, val stateFlow: StateFlow) {
 
     companion object {
-        fun create(transitionSpec: TransitionSpec.() -> TransitionSpec): Transition {
-            return TransitionSpec()
-                .transitionSpec()
+        fun create(transitionSpec: TransitionSpec.() -> Unit): Transition {
+            return TransitionSpec().apply(transitionSpec)
                 .build()
         }
     }

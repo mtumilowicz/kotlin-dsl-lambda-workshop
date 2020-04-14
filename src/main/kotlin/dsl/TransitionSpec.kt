@@ -6,19 +6,16 @@ class TransitionSpec(
     private var stateTo: String = ""
 ) {
 
-    fun on(event: String): TransitionSpec {
+    fun on(event: String) {
         this.event = event
-        return this
     }
 
-    fun from(state: String): TransitionSpec {
+    fun from(state: String) {
         stateFrom = state
-        return this
     }
 
-    fun into(state: String): TransitionSpec {
+    fun into(state: String) {
         stateTo = state
-        return this
     }
 
     fun build(): Transition {
