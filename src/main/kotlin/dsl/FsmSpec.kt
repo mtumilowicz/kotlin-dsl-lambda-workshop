@@ -1,7 +1,7 @@
 package dsl
 
 class FsmSpec(
-    val transitions: MutableList<TransitionSpec.() -> TransitionSpec> = mutableListOf(),
+    private val transitions: MutableList<TransitionSpec.() -> TransitionSpec> = mutableListOf(),
     val initialState: String
 ) {
 

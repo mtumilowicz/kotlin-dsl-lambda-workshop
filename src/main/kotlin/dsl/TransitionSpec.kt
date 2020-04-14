@@ -1,12 +1,10 @@
 package dsl
 
 class TransitionSpec(
-    var event: String?,
-    var stateFrom: String?,
-    var stateTo: String?
+    private var event: String = "",
+    private var stateFrom: String = "",
+    private var stateTo: String = ""
 ) {
-
-    constructor() : this("", "", "")
 
     fun on(event: String): TransitionSpec {
         this.event = event
@@ -25,8 +23,8 @@ class TransitionSpec(
 
     fun build(): Transition {
         return Transition(
-            event = Event(event ?: ""),
-            stateFlow = StateFlow(State(stateFrom ?: ""), State(stateTo ?: ""))
+            event = Event(event),
+            stateFlow = StateFlow(State(stateFrom), State(stateTo))
         )
     }
 }

@@ -1,6 +1,6 @@
 package dsl
 
-class StateFlow(val from: State, val into: State) {
+data class StateFlow(val from: State, val into: State) {
 
     companion object {
         @JvmStatic
