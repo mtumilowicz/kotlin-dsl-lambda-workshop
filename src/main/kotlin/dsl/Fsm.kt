@@ -6,6 +6,15 @@ class Fsm(
     val state: State
 ) {
 
+    companion object {
+        @JvmStatic
+        fun create(initialState: String, xxx: FsmSpec.() -> FsmSpec): Fsm {
+            return FsmSpec(initialState = initialState)
+                .xxx()
+                .build()
+        }
+    }
+
     fun returnToInitialState(): Fsm {
         return Fsm(transitions, initial, initial)
     }
@@ -28,6 +37,13 @@ class Fsm(
     override fun toString(): String {
         return "Fsm(transitions=$transitions, initial=$initial, state=$state)"
     }
+}
 
+fun main() {
+    val fsm = Fsm.create(initialState = "locked") {
+        add { on("coin").from("locked").into("unlocked") }
+        add { on("pass").from("unlocked").into("locked") }
+    }
 
+    println(fsm)
 }

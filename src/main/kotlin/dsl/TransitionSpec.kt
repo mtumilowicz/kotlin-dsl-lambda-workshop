@@ -30,21 +30,3 @@ class TransitionSpec(
         )
     }
 }
-
-fun main() {
-    val x = TransitionSpec().apply {
-        on("coin")
-        from("locked")
-        into("unlocked")
-    }
-
-    println(x.build())
-}
-
-fun buildXXX(
-    builderAction: TransitionSpec.() -> Unit
-) : Transition {
-    val sb = TransitionSpec()
-    sb.builderAction()
-    return sb.build()
-}

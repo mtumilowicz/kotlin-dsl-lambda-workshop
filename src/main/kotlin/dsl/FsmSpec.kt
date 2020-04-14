@@ -20,12 +20,3 @@ class FsmSpec(
         )
     }
 }
-
-fun main() {
-    val x = FsmSpec(initialState = "locked").apply {
-        add { on("coin").from("locked").into("unlocked") }
-        add { on("pass").from("unlocked").into("locked") }
-    }
-
-    println(x.build())
-}
