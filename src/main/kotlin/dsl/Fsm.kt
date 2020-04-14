@@ -38,12 +38,3 @@ class Fsm(
         return "Fsm(transitions=$transitions, initial=$initial, state=$state)"
     }
 }
-
-fun main() {
-    val fsm = Fsm.create(initialState = "locked") {
-        add { on("coin").from("locked").into("unlocked") }
-        add { on("pass").from("unlocked").into("locked") }
-    }
-
-    println(fsm)
-}
