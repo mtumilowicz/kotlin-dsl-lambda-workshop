@@ -7,10 +7,8 @@ class Fsm(
 ) {
 
     companion object {
-        fun create(initialState: String, fsmRecipe: FsmSpec.() -> FsmSpec): Fsm {
-            return FsmSpec(initialState = initialState)
-                .fsmRecipe()
-                .build()
+        fun create(initialState: String, fsmRecipe: FsmSpec.() -> Unit): Fsm {
+            return FsmSpec(initialState = initialState).apply(fsmRecipe).build()
         }
     }
 

@@ -5,9 +5,8 @@ class FsmSpec(
     val initialState: String
 ) {
 
-    fun add(transitionRecipe: TransitionSpec.() -> Unit): FsmSpec {
+    fun add(transitionRecipe: TransitionSpec.() -> Unit) {
         transitions.add(Transition.create(transitionRecipe))
-        return this
     }
 
     fun build(): Fsm {
