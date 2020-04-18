@@ -396,5 +396,55 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
     * assertTrue(str.startsWith("kot")) vs str should startWith("kot")
     * lambdas with
       receivers: the key feature that helps establish the grammar of DSL s
-      * 
+      *  In effect, you
+        can give one of the parameters of the lambda the special status of a receiver, letting you
+        refer to its members directly without any qualifier
+      * builderAction: StringBuilder.() -> Unit // Declares a parameter of a function type with a receiver
+        *  StringBuilder().builderAction() // Passes a StringBuilder as a receiver to the lambda
+        val stringAction: String.() -> Unit = { println(this + "buba") }
+        
+        stringAction("asd")
+        "viap".stringAction()
+      * String.(Int, Int) -> Unit
+        * receiver type: String
+        * parameter types: (Int, Int)
+        * Return type: Unit
+    * Why an extension function type? The idea of accessing members of an external type
+      without an explicit qualifier may remind you of extension functions, which allow you
+      to define your own methods for classes defined elsewhere in the code. Both extension
+      functions and lambdas with receivers have a receiver object, which has to be provided
+      when the function is called and is available in its body. In effect, an extension function
+      type describes a block of code that can be called as an extension function.
+    * The way you invoke the variable also changes when you convert it from a regular
+      function type to an extension function type. Instead of passing the object as an argu-
+      ment, you invoke the lambda variable as if it were an extension function.
+    * builderAction
+      here isn’t a method declared on the StringBuilder class; it’s a parameter of a func-
+      tion type that you call using the same syntax you use to call extension functions
+    * Note that a lambda with a receiver looks exactly the same as a regular lambda in the
+      source code. To see whether a lambda has a receiver, you need to look at the function
+      to which the lambda is passed: its signature will tell you whether the lambda has a
+      receiver and, if it does, what its type is.
+* Using invoke to support flexible DSL syntax
+    fun main() {
+    
+        val issues = Issues()
+        issues.add("a")
+        
+        issues {
+            add("abc")
+        } // issues({add("abc")})
+    }
+    
+    class Issues(
+        val data: MutableList<String> = mutableListOf()
+    ) {
+        fun add(s: String) {
+            data.add(s)
+        }
+    
+        operator fun invoke(body: Issues.() -> Unit) {
+            body()
+        }
+    }
       
