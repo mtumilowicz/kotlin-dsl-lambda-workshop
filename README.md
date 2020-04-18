@@ -201,6 +201,89 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
     return if (!predicate(this)) this else null
 }
 
+* Lambdas with receiver and extension functions
+    * In the body of an extension function, this refers to the instance of the type
+      the function is extending, and it can be omitted to give you direct access to the
+      receiver’s members
+    * Note that an extension function is, in a sense, a function with a receiver
+        * Regular function Regular lambda
+        * Extension function Lambda with a receiver
+    * Method-name conflicts
+        * What happens if the object you pass as a parameter to with has a method with the
+          same name as the class in which you’re using with
+        * this@OuterClass.conflictedMethod()
+
+* Adding methods to other people’s classes:
+  extension functions and properties
+  * Conceptually, an extension function is a simple thing: it’s a function that can be
+    called as a member of a class but is defined outside of it
+  * package strings
+    fun String.lastChar(): Char = this.get(this.length - 1)
+    * The receiver type (String) is the type on which the extension is
+      defined, and the receiver object (this) is the instance of that type
+    * as in a regular method, you can omit this: fun String.lastChar(): Char = get(length - 1)
+    
+* top-level function
+    *  when you compile the file, some classes will be pro-
+      duced, because the JVM can only execute code in classes
+    * you can
+      place functions directly at the top level of a source file, outside of any class
+    package strings // filename: join.kt
+    fun joinToString(...): String { ... }
+    
+    /* Java */
+    package strings;
+    public class JoinKt { // Corresponds to join.kt, the filename
+    public static String joinToString(...) { ... }
+    }
+
+* Inline functions: removing the overhead of lambdas
+    * we explained that lambdas are normally compiled to anonymous
+      classes. But that means every time you use a lambda expression, an extra class is cre-
+      ated; and if the lambda captures some variables, then a new object is created on every
+      invocation
+    *  introduces runtime overhead, causing an implementation that uses a
+      lambda to be less efficient than a function that executes the same code directly
+    * If you mark a function with the inline
+      modifier, the compiler won’t generate a function call when this function is used and
+      instead will replace every call to the function with the actual code implementing the
+      function
+    * When you declare a function as inline , its body is inlined—in other words, it’s substi-
+      tuted directly into places where the function is called instead of being invoked nor-
+      mally
+    * lambdas used to
+      process a sequence aren’t inlined. Each intermediate sequence is represented as an
+      object storing a lambda in its field, and the terminal operation causes a chain of calls
+      through each intermediate sequence to be performed
+    * For regular function calls, the JVM already provides powerful inlining support. It
+      analyzes the execution of your code and inlines calls whenever doing so provides the
+      most benefit. This happens automatically while translating bytecode to machine code.
+* Return statements in lambdas: return from an enclosing function
+    * If you use the return keyword in a lambda, it returns from the function in which you called
+      the lambda, not just from the lambda itself
+    * Such a return statement is called a non-
+      local return, because it returns from a larger block than the block containing the
+      return statement.
+    * To understand the logic behind the rule, think about using a return keyword in a
+      for loop or a synchronized block in a Java method. It’s obvious that it returns from
+      the function and not from the loop or block. Kotlin allows you to preserve the same
+      behavior when you switch from language features to functions that take lambdas as
+      arguments.
+    * Using the return expres-
+      sion in lambdas passed to non-inline functions isn’t allowed. A non-inline function
+      can save the lambda passed to it in a variable and execute it later, when the function
+      has already returned, so it’s too late for the lambda to affect when the surrounding
+      function returns.
+    * You can write a local return from a lambda expression as well. A local return in a
+      lambda is similar to a break expression in a for loop.
+      * Returns from a lambda use
+        the “@” character to mark a label
+      * people.forEach label@{
+            if (it.name == "Alice") return@label
+        }
+        people.forEach @{
+                    if (it.name == "Alice") return@forEach
+                }
 
 ## infix
 * In an infix call, the method name is placed immediately between the target object
