@@ -21,11 +21,7 @@ class TransitionSpec(
     fun build(): Transition {
         return Transition(
             event = Event(event),
-            stateFlow = StateFlow.of(stateFrom, stateTo)
+            stateFlow = StateFlow(stateFrom, stateTo)
         )
     }
-}
-
-fun main() {
-    println(2 in listOf(2))
 }

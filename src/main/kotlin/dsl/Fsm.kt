@@ -12,9 +12,7 @@ class Fsm(
         }
     }
 
-    fun returnToInitialState(): Fsm {
-        return Fsm(transitions, initial, initial)
-    }
+    fun returnToInitialState(): Fsm = Fsm(transitions, initial, initial)
 
     fun fire(event: Event): Fsm {
         return getTransitionFor(event)
@@ -23,15 +21,9 @@ class Fsm(
             ?: this
     }
 
-    operator fun get(event: String): StateFlow? {
-        return transitions[Event(event)]
-    }
+    operator fun get(event: String): StateFlow? = transitions[Event(event)]
 
-    private fun getTransitionFor(event: Event): StateFlow? {
-        return transitions[event]
-    }
+    private fun getTransitionFor(event: Event): StateFlow? = transitions[event]
 
-    override fun toString(): String {
-        return "Fsm(transitions=$transitions, initial=$initial, state=$state)"
-    }
+    override fun toString(): String = "Fsm(transitions=$transitions, initial=$initial, state=$state)"
 }
