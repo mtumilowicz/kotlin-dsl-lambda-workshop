@@ -18,4 +18,19 @@ class FsmTest : BehaviorSpec({
             }
         }
     }
+
+    given("2222") {
+        `when`("I sit on it") {
+            val fsmSpec = FsmSpec(initialState = "locked")
+            val fsm = fsmSpec {
+                add { this on "coin" from "locked" into "unlocked" }
+                add { this on "pass" from "unlocked" into "locked" }
+            }
+
+            then("I should be able to fly") {
+                fsm.initial shouldBe State("locked")
+                fsm.transitions shouldHave haveSize(2)
+            }
+        }
+    }
 })

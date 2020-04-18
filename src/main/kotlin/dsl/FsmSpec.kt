@@ -17,4 +17,9 @@ class FsmSpec(
             state = State(initialState)
         )
     }
+
+    operator fun invoke(block: FsmSpec.() -> Unit): Fsm {
+        block()
+        return build()
+    }
 }
