@@ -9,16 +9,8 @@ class FsmTest : BehaviorSpec({
     given("a broomstick") {
         `when`("I sit on it") {
             val fsm = Fsm.create(initialState = "locked") {
-                add {
-                    on("coin")
-                    from("locked")
-                    into("unlocked")
-                }
-                add {
-                    on("pass")
-                    from("unlocked")
-                    into("locked")
-                }
+                add { this on "coin" from "locked" into "unlocked" }
+                add { this on "pass" from "unlocked" into "locked" }
             }
             then("I should be able to fly") {
                 fsm.initial shouldBe State("locked")
