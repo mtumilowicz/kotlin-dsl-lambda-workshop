@@ -285,6 +285,17 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
                     if (it.name == "Alice") return@forEach
                 }
 
+* Anonymous functions: local returns by default
+    fun lookForAlice(people: List<Person>) {
+    people.forEach(fun (person) {
+    if (person.name == "Alice") return // “return” refers to the closest function: an anonymous function
+    println("${person.name} is not Alice")
+    })
+    }
+    * The rule is simple: return returns
+      from the closest function declared using the fun keyword. Lambda expressions don’t use the
+      fun keyword, so a return in a lambda returns from the outer function.
+
 ## infix
 * In an infix call, the method name is placed immediately between the target object
   name and the parameter, with no extra separators
