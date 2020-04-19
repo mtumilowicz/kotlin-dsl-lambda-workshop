@@ -26,6 +26,4 @@ data class Fsm(
     operator fun get(event: String): StateFlow? = transitions[Event(event)]
 
     private fun getTransitionFor(event: String): StateFlow? = get(event)
-
-    override fun toString(): String = "Fsm(transitions=$transitions, initial=$initial, state=$state)"
 }

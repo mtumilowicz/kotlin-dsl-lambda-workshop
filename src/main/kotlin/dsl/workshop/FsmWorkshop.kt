@@ -1,35 +1,42 @@
 package dsl.workshop
 
 import dsl.answers.Event
-import dsl.answers.State
 import dsl.answers.StateFlow
 
-data class FsmWorkshop(
-    val transitions: Map<Event, StateFlow>,
-    val initial: State,
-    val state: State
-) {
+/*
+data class with fields: transitions (Map<Event, StateFlow>), initial, state
+ */
+class FsmWorkshop() {
 
-    companion object {
-        @JvmStatic
-        fun create(initialState: String, fsmRecipe: FsmSpecWorkshop.() -> Unit): FsmWorkshop {
-            return FsmSpecWorkshop(initialState = initialState).apply(fsmRecipe).build()
-        }
-    }
+    /*
+    static fun create
+    @JvmStatic - enable using in tests
 
-    fun returnToInitialState(): FsmWorkshop =
-        FsmWorkshop(transitions, initial, initial)
+    creates FsmWorkshop from arguments: initialState and fsmRecipe
+    hint: companion object
+    hint: FsmSpecWorkshop.() -> Unit, FsmSpecWorkshop, apply
+     */
 
-    fun fire(event: String): FsmWorkshop {
-        return getTransitionFor(event)
-            ?.takeIf { it.from == state }
-            ?.let { FsmWorkshop(transitions, initial, it.into) }
-            ?: this
-    }
+    /*
+    fun returnToInitialState()
 
-    operator fun get(event: String): StateFlow? = transitions[Event(event)]
+    return copy with restored initial state as a current state
+     */
 
-    private fun getTransitionFor(event: String): StateFlow? = get(event)
+    /*
+    fun fire - move from state to state on event
 
-    override fun toString(): String = "Fsm(transitions=$transitions, initial=$initial, state=$state)"
+    hint: getTransitionFor(event), takeIf, let
+     */
+
+    /*
+    overload operator get to enable fsm[event] syntax
+    hint: get(event: String)
+     */
+
+    /*
+    private fun getTransitionFor
+
+    return appropriate StateFlow
+     */
 }

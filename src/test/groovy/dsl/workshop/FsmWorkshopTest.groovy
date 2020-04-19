@@ -1,6 +1,5 @@
-package dsl.worshop
+package dsl.workshop
 
-import dsl.workshop.FsmWorkshop
 import dsl.answers.State
 import dsl.answers.StateFlow
 import spock.lang.Specification

@@ -2,26 +2,30 @@ package dsl.workshop
 
 import dsl.answers.State
 
-class FsmSpecWorkshop(
-    private val transitions: MutableList<TransitionWorkshop> = mutableListOf(),
-    val initialState: String
-) {
+/*
+fields
+    * mutable list of transitions, hint: MutableList, TransitionWorkshop, mutableListOf
+    * initial state
+ */
+class FsmSpecWorkshop() {
 
-    fun add(transitionRecipe: TransitionSpecWorkshop.() -> Unit) {
-        transitions.add(TransitionWorkshop.create(transitionRecipe))
-    }
+    /*
+    label: fun add
 
-    fun build(): FsmWorkshop {
-        val map = transitions.associateBy({ it.event }, { it.stateFlow })
-        return FsmWorkshop(
-            transitions = map,
-            initial = State(initialState),
-            state = State(initialState)
-        )
-    }
+    argument: transition recipe - TransitionSpecWorkshop as a receiver, hint: TransitionSpecWorkshop.() -> Unit
+    function in its body creates TransitionWorkshop from recipe, hint: TransitionWorkshop.create
+    and adds it to the transitions, hint: transitions.add
+     */
 
-    operator fun invoke(block: FsmSpecWorkshop.() -> Unit): FsmWorkshop {
-        block()
-        return build()
-    }
+    /*
+    label: fun build()
+
+    builds FsmWorkshop
+    function in its body creates map from transitions: Map<Event, StateFlow> hint: associateBy
+     */
+
+    /*
+    overload operator invoke to be able to call fsm { add ... add ... build() } to get FsmWorkshop
+    hint: FsmSpecWorkshop.() -> Unit
+     */
 }

@@ -17,6 +17,11 @@ dependencies {
     testImplementation 'io.kotest:kotest-assertions-core-jvm:4.0.2'
 }
 
+test {
+    exclude '**/workshop*'
+}
+
+
 //tasks.test {
 //    useJUnitPlatform()
 //}

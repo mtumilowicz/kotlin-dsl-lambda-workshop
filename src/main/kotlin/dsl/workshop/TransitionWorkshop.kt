@@ -1,16 +1,18 @@
 package dsl.workshop
 
-import dsl.answers.Event
-import dsl.answers.StateFlow
+/*
+fields: event, stateFlow, hint: Event, StateFlow
+data class
+ */
+class TransitionWorkshop() {
 
-data class TransitionWorkshop(val event: Event, val stateFlow: StateFlow) {
+    /*
+    fun create
+    static function create, that creates from provided specification
+    hint: companion object, TransitionSpecWorkshop.() -> Unit, apply
+     */
 
-    companion object {
-        fun create(transitionSpec: TransitionSpecWorkshop.() -> Unit): TransitionWorkshop {
-            return TransitionSpecWorkshop().apply(transitionSpec)
-                .build()
-        }
-    }
-
-    override fun toString(): String = "$event: $stateFlow"
+    /*
+    override toString: "$event: $stateFlow"
+     */
 }

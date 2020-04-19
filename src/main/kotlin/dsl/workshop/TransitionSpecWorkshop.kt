@@ -3,31 +3,17 @@ package dsl.workshop
 import dsl.answers.Event
 import dsl.answers.StateFlow
 
-class TransitionSpecWorkshop(
-    private var event: String = "",
-    private var stateFrom: String = "",
-    private var stateTo: String = ""
-) {
+/*
+fields with defaults: event, stateFrom, stateTo
+ */
+class TransitionSpecWorkshop() {
 
-    infix fun on(event: String): TransitionSpecWorkshop {
-        this.event = event
-        return this
-    }
+    /*
+    infix functions: on (set event), from (set stateFrom), into (set stateTo)
+    enable chaining, hint: return this
+     */
 
-    infix fun from(state: String): TransitionSpecWorkshop {
-        stateFrom = state
-        return this
-    }
-
-    infix fun into(state: String): TransitionSpecWorkshop {
-        stateTo = state
-        return this
-    }
-
-    fun build(): TransitionWorkshop {
-        return TransitionWorkshop(
-            event = Event(event),
-            stateFlow = StateFlow(stateFrom, stateTo)
-        )
-    }
+    /*
+    fun build() to build TransitionWorkshop, hint: StateFlow(stateFrom, stateTo)
+     */
 }

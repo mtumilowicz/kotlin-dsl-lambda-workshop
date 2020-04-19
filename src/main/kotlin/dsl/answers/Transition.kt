@@ -1,6 +1,9 @@
 package dsl.answers
 
-data class Transition(val event: Event, val stateFlow: StateFlow) {
+data class Transition(
+    val event: Event,
+    val stateFlow: StateFlow
+) {
 
     companion object {
         fun create(transitionSpec: TransitionSpec.() -> Unit): Transition {
