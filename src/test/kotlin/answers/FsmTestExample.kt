@@ -9,31 +9,32 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldHave
 
 class FsmTestExample : BehaviorSpec({
-    given("a broomstick") {
-        `when`("I sit on it") {
-            val fsm = Fsm.create(initialState = "locked") {
-                add { this on "coin" from "locked" into "unlocked" }
-                add { this on "pass" from "unlocked" into "locked" }
-            }
-            then("I should be able to fly") {
-                fsm.initial shouldBe State("locked")
-                fsm.transitions shouldHave haveSize(2)
-            }
+
+    given("fsm") {
+        val fsm = Fsm.create(initialState = "locked") {
+            add { this on "coin" from "locked" into "unlocked" }
+            add { this on "pass" from "unlocked" into "locked" }
+        }
+        then("I could move from state to state") {
+            fsm.initial shouldBe State("locked")
+            fsm.transitions shouldHave haveSize(2)
+            fsm["coin"] shouldBe State("unlocked")
+            fsm["pass"] shouldBe State("locked")
         }
     }
 
-    given("2222") {
-        `when`("I sit on it") {
-            val fsmSpec = FsmSpec(initialState = "locked")
-            val fsm = fsmSpec {
-                add { this on "coin" from "locked" into "unlocked" }
-                add { this on "pass" from "unlocked" into "locked" }
-            }
+    given("fsm from fsm spec") {
+        val fsmSpec = FsmSpec(initialState = "locked")
+        val fsm = fsmSpec {
+            add { this on "coin" from "locked" into "unlocked" }
+            add { this on "pass" from "unlocked" into "locked" }
+        }
 
-            then("I should be able to fly") {
-                fsm.initial shouldBe State("locked")
-                fsm.transitions shouldHave haveSize(2)
-            }
+        then("I could move from state to state") {
+            fsm.initial shouldBe State("locked")
+            fsm.transitions shouldHave haveSize(2)
+            fsm["coin"] shouldBe State("unlocked")
+            fsm["pass"] shouldBe State("locked")
         }
     }
 })
