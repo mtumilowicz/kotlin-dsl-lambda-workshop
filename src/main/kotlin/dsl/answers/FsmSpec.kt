@@ -1,4 +1,4 @@
-package dsl
+package dsl.answers
 
 class FsmSpec(
     private val transitions: MutableList<Transition> = mutableListOf(),

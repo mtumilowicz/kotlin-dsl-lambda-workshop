@@ -1,4 +1,4 @@
-package dsl
+package dsl.answers
 
 data class Transition(val event: Event, val stateFlow: StateFlow) {
 

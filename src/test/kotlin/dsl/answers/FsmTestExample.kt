@@ -1,8 +1,5 @@
-package answers
+package dsl.answers
 
-import dsl.Fsm
-import dsl.FsmSpec
-import dsl.State
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.maps.haveSize
 import io.kotest.matchers.shouldBe

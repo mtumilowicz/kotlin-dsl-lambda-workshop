@@ -1,8 +1,5 @@
-package answers
+package dsl.answers
 
-import dsl.Fsm
-import dsl.State
-import dsl.StateFlow
 import spock.lang.Specification
 
 class FsmTest extends Specification {

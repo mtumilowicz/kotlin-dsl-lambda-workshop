@@ -1,4 +1,4 @@
-package dsl
+package dsl.answers
 
 data class Fsm(
     val transitions: Map<Event, StateFlow>,
@@ -13,7 +13,8 @@ data class Fsm(
         }
     }
 
-    fun returnToInitialState(): Fsm = Fsm(transitions, initial, initial)
+    fun returnToInitialState(): Fsm =
+        Fsm(transitions, initial, initial)
 
     fun fire(event: String): Fsm {
         return getTransitionFor(event)

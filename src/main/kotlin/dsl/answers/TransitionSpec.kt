@@ -1,4 +1,4 @@
-package dsl
+package dsl.answers
 
 class TransitionSpec(
     private var event: String = "",
