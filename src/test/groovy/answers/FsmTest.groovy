@@ -62,10 +62,10 @@ class FsmTest extends Specification {
 
         when: 'on-from-into'
         def fsm = Fsm.create("initialState") {
-           it.add { it.on _event1 from _event1From into _event1Into } // it.on from into
-           it.add { it.from _event2From on _event2 into _event2Into } // from it.on into
-           it.add { it.from _event3From into _event3Into on _event3 } // from into on
-           it.add { it.into _event4Into from _event4From on _event4 } // into from on
+            it.add { it.on _event1 from _event1From into _event1Into } // it.on from into
+            it.add { it.from _event2From on _event2 into _event2Into } // from it.on into
+            it.add { it.from _event3From into _event3Into on _event3 } // from into on
+            it.add { it.into _event4Into from _event4From on _event4 } // into from on
         }
 
         then: 'outcome is always the same'
@@ -100,7 +100,7 @@ class FsmTest extends Specification {
 
         and: 'create fsm with single transition not designed for state'
         def fsm = Fsm.create(_state) {
-           it.add { it.on _event from 'stateFrom' into 'stateTo' }
+            it.add { it.on _event from 'stateFrom' into 'stateTo' }
         }
 
         when: 'transition is not designed for current state'
@@ -121,7 +121,7 @@ class FsmTest extends Specification {
 
         and: 'create fsm with single transition designed for state'
         def fsm = Fsm.create(_state) {
-           it.add { it.on _event from _state into _stateTo }
+            it.add { it.on _event from _state into _stateTo }
         }
 
         when: 'transition is designed for current state'
@@ -145,7 +145,7 @@ class FsmTest extends Specification {
 
         given: 'create fsm with single transition'
         def fsm = Fsm.create('initialState') {
-           it.add { it.on 'event' from 'initialState' into 'state2' }
+            it.add { it.on 'event' from 'initialState' into 'state2' }
         }
 
         and: 'state changes to state2'
