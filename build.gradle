@@ -17,9 +17,9 @@ dependencies {
     testImplementation 'io.kotest:kotest-assertions-core-jvm:4.0.2'
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+//tasks.test {
+//    useJUnitPlatform()
+//}
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"

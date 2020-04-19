@@ -8,7 +8,7 @@ import io.kotest.matchers.maps.haveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldHave
 
-class FsmTest : BehaviorSpec({
+class FsmTestExample : BehaviorSpec({
     given("a broomstick") {
         `when`("I sit on it") {
             val fsm = Fsm.create(initialState = "locked") {
