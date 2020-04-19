@@ -1,24 +1,15 @@
-* https://kotlinlang.org/docs/reference/scope-functions.html
-* https://www.manning.com/books/kotlin-in-action
-
 # kotlin-dsl-lambda-workshop
 
+* reference
+    * https://kotlinlang.org/docs/reference/scope-functions.html
+    * https://www.manning.com/books/kotlin-in-action
+
 ## extension function
-* Adding methods to other people’s classes:
-  extension functions and properties
-  * Conceptually, an extension function is a simple thing: it’s a function that can be
-    called as a member of a class but is defined outside of it
-  * package strings
-    fun String.lastChar(): Char = this.get(this.length - 1)
-    * The receiver type (String) is the type on which the extension is
-      defined, and the receiver object (this) is the instance of that type
-    * as in a regular method, you can omit this: fun String.lastChar(): Char = get(length - 1)
-    
 * top-level function
-    *  when you compile the file, some classes will be pro-
-      duced, because the JVM can only execute code in classes
-    * you can
-      place functions directly at the top level of a source file, outside of any class
+    * JVM can only execute code  in classes
+    * you can place functions directly at the top level of a source file, outside of any class
+        * when you compile the file, some classes will be produced
+    ```
     package strings // filename: join.kt
     fun joinToString(...): String { ... }
     
@@ -27,6 +18,15 @@
     public class JoinKt { // Corresponds to join.kt, the filename
     public static String joinToString(...) { ... }
     }
+    ```
+* it’s a function that can be called as a member of a class but is defined outside of it
+* example
+    ```
+    fun String.lastChar(): Char = this.get(this.length - 1)
+    fun String.lastChar(): Char = get(length - 1) // this is implicit
+    ```
+    * receiver type: String - type on which the extension is defined
+    * receiver object: this - the instance of that type
     
 ## lambdas with receivers
 * the ability to call methods of a different object in the body of a
