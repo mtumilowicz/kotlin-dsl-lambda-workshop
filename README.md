@@ -112,17 +112,15 @@ extra separators
 * to unlock infixing, you need to mark function with the `infix` modifier
 
 ## invoke operator
-* Using invoke to support flexible DSL syntax
-    fun main() {
-    
-        val issues = Issues()
-        issues.add("a")
-        
-        issues { // issues({add("abc")}) -> issues() {add("abc")} -> issues {add("abc")}
-            add("abc")
-        }
-    }
-    
+* we could invoke function types (single abstract method: `invoke`) in a very simple way
+    ```
+    val function: (String) -> Boolean = {...}
+    val argument = "Michal"
+    function(argument) // internally calls SAM
+    ```
+* invoke is an operator
+* example
+    ```
     class Issues(
         val data: MutableList<String> = mutableListOf()
     ) {
@@ -134,7 +132,17 @@ extra separators
             body()
         }
     }
+    ```
+    adding feature to call lambda outside of brackets we get
+    ```
+    val issues = Issues()
+    issues.add("a")
     
+    issues { // issues({add("abc")}) -> issues() {add("abc")} -> issues {add("abc")}
+        add("abc")
+    }
+    ```
+  
 ## destructuring
 * example
     ```
