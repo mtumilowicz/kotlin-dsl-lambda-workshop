@@ -6,166 +6,103 @@
 
 ## extension function
 * top-level function
-    * JVM can only execute code  in classes
     * you can place functions directly at the top level of a source file, outside of any class
-        * when you compile the file, some classes will be produced
-    ```
-    package strings // filename: join.kt
-    fun joinToString(...): String { ... }
-    
-    /* Java */
-    package strings;
-    public class JoinKt { // Corresponds to join.kt, the filename
-    public static String joinToString(...) { ... }
-    }
-    ```
-* it’s a function that can be called as a member of a class but is defined outside of it
-* example
-    ```
-    fun String.lastChar(): Char = this.get(this.length - 1)
-    fun String.lastChar(): Char = get(length - 1) // this is implicit
-    ```
-    * receiver type: String - type on which the extension is defined
-    * receiver object: this - the instance of that type
+    * when you compile the file, some classes will be produced
+        * JVM can only execute code  in classes
+    * example
+        ```
+        package strings // filename: StringUtils.kt
+        fun isNotEmpty(...): Boolean { ... }
+        
+        /* Java */
+        package strings;
+        public class StringUtilsKt { // corresponds to the filename
+            public static Boolean isNotEmpty(...) { ... }
+        }
+        ```
+* extension function it’s a function that can be called as a member of a class but is defined outside of it
+    * example
+        ```
+        fun String.lastChar(): Char = this.get(this.length - 1)
+        fun String.lastChar(): Char = get(length - 1) // this is implicit
+        ```
+        * receiver type: `String` - type on which the extension is defined
+        * receiver object: `this` - the instance of that type
     
 ## lambdas with receivers
-* the ability to call methods of a different object in the body of a
-  lambda without any additional qualifiers.
-   
-* run - Calls the specified function [block] and returns its result
-    ```
-    @kotlin.internal.InlineOnly
-    public inline fun <R> run(block: () -> R): R {
-        contract {
-            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+* the ability to call methods of a different object in the body of a lambda
+* example
+    * `apply` - calls the specified function `block` with `this` value as its receiver and returns 
+    `this` value
+        ```
+        @kotlin.internal.InlineOnly
+        public inline fun <T> T.apply(block: T.() -> Unit): T {
+            contract {
+                callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+            }
+            block()
+            return this
         }
-        return block()
-    }  
-    ```
-* run - Calls the specified function [block] with `this` value as its receiver and returns its result.
-    ```
-    @kotlin.internal.InlineOnly
-    public inline fun <T, R> T.run(block: T.() -> R): R {
-        contract {
-            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        ```
+    * use case
+        ```
+        val name = StringBuilder().apply {
+            append("M")
+            append("i")
+            append("chal")
+            toString()
         }
-        return block()
-    }
-    ```
-* with - calls the specified function [block] with the given [receiver] as its receiver and 
-returns its result
-    ```
-    @kotlin.internal.InlineOnly
-    public inline fun <T, R> with(receiver: T, block: T.() -> R): R {
-        contract {
-            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-        }
-        return receiver.block()
-    }
-    ```
-* apply - Calls the specified function [block] with `this` value as its receiver and returns `this` value
-    ```
-    @kotlin.internal.InlineOnly
-    public inline fun <T> T.apply(block: T.() -> Unit): T {
-        contract {
-            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-        }
-        block()
-        return this
-    }
-    ```
-
-* also - Calls the specified function [block] with `this` value as its argument and returns `this` value.
-    ```
-    @kotlin.internal.InlineOnly
-    @SinceKotlin("1.1")
-    public inline fun <T> T.also(block: (T) -> Unit): T {
-        contract {
-            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-        }
-        block(this)
-        return this
-    }
-    ```
-* let - Calls the specified function [block] with `this` value as its argument and returns its result.
-    ```
-    @kotlin.internal.InlineOnly
-    public inline fun <T, R> T.let(block: (T) -> R): R {
-        contract {
-            callsInPlace(block, InvocationKind.EXACTLY_ONCE)
-        }
-        return block(this)
-    }
-    ```
-* takeIf - Returns `this` value if it satisfies the given [predicate] or `null`, if it doesn't.
-    ```
-    @kotlin.internal.InlineOnly
-    @SinceKotlin("1.1")
-    public inline fun <T> T.takeIf(predicate: (T) -> Boolean): T? {
-        contract {
-            callsInPlace(predicate, InvocationKind.EXACTLY_ONCE)
-        }
-        return if (predicate(this)) this else null
-    }
-    ```
-* takeUnless - Returns `this` value if it _does not_ satisfy the given [predicate] or `null`, if it does.
-    ```
-    @kotlin.internal.InlineOnly
-    @SinceKotlin("1.1")
-    public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
-        contract {
-            callsInPlace(predicate, InvocationKind.EXACTLY_ONCE)
-        }
-        return if (!predicate(this)) this else null
-    }
-    ```
-
-* Lambdas with receiver and extension functions
-    * In the body of an extension function, this refers to the instance of the type
-      the function is extending, and it can be omitted to give you direct access to the
-      receiver’s members
-    * Note that an extension function is, in a sense, a function with a receiver
-        * Regular function Regular lambda
-        * Extension function Lambda with a receiver
-    * Method-name conflicts
-        * What happens if the object you pass as a parameter to with has a method with the
-          same name as the class in which you’re using with
-        * this@OuterClass.conflictedMethod()
+        println(name) // Michal
+        ```
+    * `T.run(block: T.() -> R)`
+        * calls the specified function `block` with `this` value as its receiver and returns its result
+    * `with(receiver: T, block: T.() -> R)`
+        * calls the specified function `block` with `receiver` as its receiver and returns its result
+* lambdas with receiver and extension functions
+    * note that an extension function is, in a sense, a function with a receiver
+        * `this` refers to the instance of the type the function is extending
+    * analogy
+        * regular function <-> regular lambda
+        * extension function <-> lambda with a receiver
+    * method-name conflicts
+        * use `this@OuterClass.conflictedMethod()`
         
 ## infix
-* In an infix call, the method name is placed immediately between the target object
-  name and the parameter, with no extra separators
-    * 1.to("one") 
-    * 1 to "one" 
-* To allow a function to be called using the infix notation, you need to mark it with the infix modifier.
+* example
+    * `1 to "one"` is same as `1.to("one")`
+* the method name is placed between the target object and the parameter, with no 
+extra separators
+* to unlock infixing, you need to mark function with the `infix` modifier
 
 ## destructuring
-* destructuring declarations
-    * allows you
-      to unpack a single composite value and use it to initialize several separate variables
-    * val p = Point(10, 20)
-    * val (x, y) = p
-    * Under the hood, the destructuring declaration once again uses the principle of con-
-      ventions. To initialize each variable in a destructuring declaration, a function named
-      componentN is called, where N is the position of the variable in the declaration
-    * For a data class, the compiler gen-
-      erates a componentN function for
-      every property declared in the primary
-      constructor
+* example
+    ```
+    val p = Point(10, 20)
+    val (x, y) = p  
+    ```
+    ```
+    for ((key, value) in map) {
+        println("$key -> $value")
+    }
+    ```
+* to initialize each variable - a function named `componentN` is called
+    * N is the position of the variable in the declaration
+* for a data class, the compiler generates a `componentN` function for every property declared 
+in the primary constructor
+    * vanilla example
+        ```
         class Point(val x: Int, val y: Int) {
             operator fun component1() = x
             operator fun component2() = y
-        }
-    * example
-        val (name, ext) = "filename.exe".split(".", limit = 2)
-        println("$name $ext")
-        * Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 1, Size: 1
-    * it’s not possible to define an infinite number of such componentN func-
-      tions so the syntax would work with an arbitrary number of items
-    * example
-        for ((key, value) in map) {
-            println("$key -> $value")
-        }
+        }      
+        ```
+* use-case
+    ```
+    val (name, ext) = "filename.exe".split(".", limit = 2)
+    println("$name $ext") // filename exe
+    ```
+    * destructuring could throw exceptions in case of too few arguments
+        * `Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 1, Size: 1`
 
 ### dsl
 * Table 11.1 Kotlin support for clean syntax
