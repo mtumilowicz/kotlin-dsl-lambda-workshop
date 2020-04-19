@@ -3,6 +3,21 @@
 * reference
     * https://kotlinlang.org/docs/reference/scope-functions.html
     * https://www.manning.com/books/kotlin-in-action
+    * please refer previously: https://github.com/mtumilowicz/groovy258-dsl-closure-workshop
+        * this workshop is analogous but in kotlin
+        
+## preface
+* goals of this workshop:
+    * introduce fundamental kotlin concepts
+        * extension function
+        * lambda with receiver
+        * infix operator
+        * invoke operator
+        * overloading operators
+        * object destructuring
+    * understanding what is state machine and how it works
+    * becoming acquainted with DSL and how kotlin supports it
+* workshop: `workshop` package, answers: `answers` package
 
 ## extension function
 * top-level function
@@ -31,7 +46,7 @@
     
 ## lambdas with receivers
 * the ability to call methods of a different object in the body of a lambda
-* example
+* example (from standard library)
     * `apply` - calls the specified function `block` with `this` value as its receiver and returns 
     `this` value
         ```
@@ -66,7 +81,29 @@
         * extension function <-> lambda with a receiver
     * method-name conflicts
         * use `this@OuterClass.conflictedMethod()`
-        
+* an extension function type describes a block of code that can be called as an extension function
+    * syntax example
+        * `String.(Int, Int) -> Unit`
+            * receiver type: `String`
+            * parameter types: `(Int, Int)`
+            * return type: `Unit`
+    * use-case example
+        ```
+        val sign: String.(name: String) -> String = { name ->
+            StringBuilder(this)
+                .append(name)
+                .toString()
+        }
+    
+        println("Approved by: ".sign("Michal Tumilowicz")) // Approved by: Michal Tumilowicz
+        ```
+    * instead of passing the object as an argument - invoke the lambda as if it were an extension function
+        * it's perfectly ok to invoke example above as
+            ```
+            sign("Approved by: ", "Michal Tumilowicz")
+            ```
+* therefore, a lambda with a receiver looks exactly the same as a regular lambda in the source code
+
 ## infix
 * example
     * `1 to "one"` is same as `1.to("one")`
@@ -74,6 +111,30 @@
 extra separators
 * to unlock infixing, you need to mark function with the `infix` modifier
 
+## invoke operator
+* Using invoke to support flexible DSL syntax
+    fun main() {
+    
+        val issues = Issues()
+        issues.add("a")
+        
+        issues { // issues({add("abc")}) -> issues() {add("abc")} -> issues {add("abc")}
+            add("abc")
+        }
+    }
+    
+    class Issues(
+        val data: MutableList<String> = mutableListOf()
+    ) {
+        fun add(s: String) {
+            data.add(s)
+        }
+    
+        operator fun invoke(body: Issues.() -> Unit) {
+            body()
+        }
+    }
+    
 ## destructuring
 * example
     ```
@@ -104,108 +165,37 @@ in the primary constructor
     * destructuring could throw exceptions in case of too few arguments
         * `Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 1, Size: 1`
 
-### dsl
-* Table 11.1 Kotlin support for clean syntax
-    * Extension function
-        * Regular syntax StringUtil.capitalize(s) 
-        * Clean syntax s.capitalize()
-    * Infix call
-        * 1.to("one") 
-        * 1 to "one" 
-    * Operator overloading
-        * listOf(1,2).contains(2)
-        * 2 in listOf(1, 2)
-    * Convention for the get method
-        * map.get("key") 
-        * map["key"] 
-    * Lambda outside of parentheses
-        * file.use({ f -> f.read() } ) 
-        * file.use { it.read() }
-    * Lambda with a receiver
-        * Regular syntax
-            sb.append("yes")
-            sb.append("no")
-        * Clean syntax
-            with (sb) {
-                append("yes")
-                append("no")
-            }
-    
-* dsl
-    * Generally speaking, there’s no well-defined boundary between a DSL and a regular
-      API
-    * But one trait comes up often in DSL s and usually
-      doesn’t exist in other API s: structure, or grammar
-    * A typical library consists of many methods, and the client uses the library by calling
-      the methods one by one. There’s no inherent structure in the sequence of calls, and
-      no context is maintained between one call and the next. Such an API is sometimes
-      called a command-query API .
-    * As a contrast, the method calls in a DSL exist in a larger
-      structure, defined by the grammar of the DSL
-      * In a Kotlin DSL , structure is most com-
-        monly created through the nesting of lambdas or through chained method calls
-    * You
-      can clearly see this in the previous SQL example: executing a query requires a combi-
-      nation of method calls describing the different aspects of the required result set
-    * This grammar is what allows us to call an internal DSL a language. In a natural lan-
-      guage such as English, sentences are constructed out of words, and the rules of gram-
-      mar govern how those words can be combined with one another. Similarly, in a DSL , a
-      single operation can be composed out of multiple function calls, and the type checker
-      ensures that the calls are combined in a meaningful way. In effect, the function names
-      usually act as verbs ( groupBy , orderBy ), and their arguments fulfill the role of nouns
-      ( Country.name )
-    * assertTrue(str.startsWith("kot")) vs str should startWith("kot")
-    * lambdas with
-      receivers: the key feature that helps establish the grammar of DSL s
-      *  In effect, you
-        can give one of the parameters of the lambda the special status of a receiver, letting you
-        refer to its members directly without any qualifier
-      * builderAction: StringBuilder.() -> Unit // Declares a parameter of a function type with a receiver
-        *  StringBuilder().builderAction() // Passes a StringBuilder as a receiver to the lambda
-        val stringAction: String.() -> Unit = { println(this + "buba") }
-        
-        stringAction("asd")
-        "viap".stringAction()
-      * String.(Int, Int) -> Unit
-        * receiver type: String
-        * parameter types: (Int, Int)
-        * Return type: Unit
-    * Why an extension function type? The idea of accessing members of an external type
-      without an explicit qualifier may remind you of extension functions, which allow you
-      to define your own methods for classes defined elsewhere in the code. Both extension
-      functions and lambdas with receivers have a receiver object, which has to be provided
-      when the function is called and is available in its body. In effect, an extension function
-      type describes a block of code that can be called as an extension function.
-    * The way you invoke the variable also changes when you convert it from a regular
-      function type to an extension function type. Instead of passing the object as an argu-
-      ment, you invoke the lambda variable as if it were an extension function.
-    * builderAction
-      here isn’t a method declared on the StringBuilder class; it’s a parameter of a func-
-      tion type that you call using the same syntax you use to call extension functions
-    * Note that a lambda with a receiver looks exactly the same as a regular lambda in the
-      source code. To see whether a lambda has a receiver, you need to look at the function
-      to which the lambda is passed: its signature will tell you whether the lambda has a
-      receiver and, if it does, what its type is.
-* Using invoke to support flexible DSL syntax
-    fun main() {
-    
-        val issues = Issues()
-        issues.add("a")
-        
-        issues { // issues({add("abc")}) -> issues() {add("abc")} -> issues {add("abc")}
-            add("abc")
-        }
-    }
-    
-    class Issues(
-        val data: MutableList<String> = mutableListOf()
-    ) {
-        fun add(s: String) {
-            data.add(s)
-        }
-    
-        operator fun invoke(body: Issues.() -> Unit) {
-            body()
-        }
-    }
-      
+## operator overloading
+* every overloaded operator is defined as a function
+* there are many operators to overload
+    * arithmetic
+    * compound assignment (ex. `=+`)
+    * unary (ex. `-obj`)
+    * comparison
+    * contains (ex. `2 in setOf(1, 2)`)
+    * rangeTo (ex. `1..10`)
+    * others: https://kotlinlang.org/docs/reference/operator-overloading.html
+
+## dsl
+* there’s no well-defined boundary between a DSL and a regular API
+    * one trait especially characteristic for DSL - structure (grammar)
+* in API - no inherent structure in the sequence of calls, no context maintained between one call 
+and the next
+    * sometimes called command-query API
+* the method calls in a DSL exist in a larger structure, defined by the grammar of the DSL
+    * In a Kotlin - structure is created by nesting lambdas and chained method calls
+* grammar is what allows us to call an internal DSL a language
+    * similar to a natural language such as English
+        * the function names usually act as verbs ( groupBy , orderBy )
+        * their arguments fulfill the role of nouns ( Country.name )
+        * single operation (tense) can be composed out of multiple function calls (words)
+        * the type checker ensured the calls are combined in a meaningful way 
+* kotlin support for DSL
+    * extension function
+    * infix call
+    * operator overloading
+        * `2 in listOf(1, 2) // listOf(1,2).contains(2)`
+        * `map["key"] // map.get("key")`
+    * lambda outside of parentheses
+        * `file.use { it.read() } // file.use({ f -> f.read() } ) `
+    * lambda with a receiver
