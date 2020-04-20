@@ -37,6 +37,7 @@
             public static Boolean isNotEmpty(...) { ... }
         }
         ```
+* we can define them inside classes as members - therefore narrow the scope
 * extension function it’s a function that can be called as a member of a class but is defined outside of it
     * example
         ```
