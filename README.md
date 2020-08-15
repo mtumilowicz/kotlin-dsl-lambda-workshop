@@ -106,6 +106,7 @@
         * `fun doSomethingWithInt(receiver: Int.() -> Unit)`
         * how this is different from Regular lambda like `() -> Unit`?
         * similar to extension function we could call: `5.receiver()`
+        * you can also write `receiver(5)`
 * therefore, a lambda with a receiver looks exactly the same as a regular lambda in the source code
 
 ## infix
