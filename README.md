@@ -86,6 +86,10 @@
     val client = createClient {
         firstName = "Anton" // implicit this
         lastName = "Arhipov"
+  
+        twitter { // method call: this.twitter(...)
+            name = "@antonarhipov"
+        }
     }
     ```
     * is same as
@@ -99,6 +103,7 @@
     val client = createClient {
         it.firstName = "Anton" // explicit it
         it.lastName = "Arhipov"
+        it.twitter(...)
     }
     ```
 * lambdas with receiver and extension functions
