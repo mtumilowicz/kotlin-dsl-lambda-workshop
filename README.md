@@ -6,6 +6,8 @@
     * https://kotlinlang.org/docs/reference/scope-functions.html
     * https://www.manning.com/books/kotlin-in-action
     * https://stackoverflow.com/questions/33190613/what-does-a-kotlin-function-signature-with-t-mean
+    * [ANTON ARHIPOV - Kotlin DSL in under an hour](https://www.youtube.com/watch?v=zYNbsVv9oN0)
+    * https://github.com/antonarhipov/kotlin-dsl-examples
     * please refer previously: https://github.com/mtumilowicz/groovy258-dsl-closure-workshop
         * this workshop is analogous but in kotlin
         
@@ -73,6 +75,32 @@
         }
         println(name) // Michal
         ```
+* lambda with a receiver looks exactly the same as a regular lambda in the source code
+    ```
+    fun createClient(c: ClientBuilder.() -> Unit): Client {
+        val builder = ClientBuilder()
+        c(builder) // or builder.c()
+        return builder.build()
+    }
+    
+    val client = createClient {
+        firstName = "Anton" // implicit this
+        lastName = "Arhipov"
+    }
+    ```
+    * is same as
+    ```
+    fun createClient(c: (ClientBuilder) -> Unit): Client { // difference here
+        val builder = ClientBuilder()
+        c(builder)
+        return builder.build()
+    }
+    
+    val client = createClient {
+        it.firstName = "Anton" // explicit it
+        it.lastName = "Arhipov"
+    }
+    ```
 * lambdas with receiver and extension functions
     * note that an extension function is, in a sense, a function with a receiver
         * `this` refers to the instance of the type the function is extending
@@ -81,33 +109,11 @@
         * extension function <-> lambda with a receiver
     * method-name conflicts
         * use `this@OuterClass.conflictedMethod()`
-* an extension function type describes a block of code that can be called as an extension function
-    * syntax example
-        * `String.(Int, Int) -> Unit`
-            * receiver type: `String`
-            * parameter types: `(Int, Int)`
-            * return type: `Unit`
-    * use-case example
-        ```
-        val sign: String.(name: String) -> String = { name ->
-            StringBuilder(this)
-                .append(name)
-                .toString()
-        }
-    
-        println("Approved by: ".sign("Michal Tumilowicz")) // Approved by: Michal Tumilowicz
-        ```
-    * instead of passing the object as an argument - invoke the lambda as if it were an extension function
-        * it's perfectly ok to invoke example above as
-            ```
-            sign("Approved by: ", "Michal Tumilowicz")
-            ```
     * what is exactly `T.()`?
         * `fun doSomethingWithInt(receiver: Int.() -> Unit)`
         * how this is different from Regular lambda like `() -> Unit`?
         * similar to extension function we could call: `5.receiver()`
         * you can also write `receiver(5)`
-* therefore, a lambda with a receiver looks exactly the same as a regular lambda in the source code
 
 ## infix
 * example
