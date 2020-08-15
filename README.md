@@ -5,6 +5,7 @@
 * reference
     * https://kotlinlang.org/docs/reference/scope-functions.html
     * https://www.manning.com/books/kotlin-in-action
+    * https://stackoverflow.com/questions/33190613/what-does-a-kotlin-function-signature-with-t-mean
     * please refer previously: https://github.com/mtumilowicz/groovy258-dsl-closure-workshop
         * this workshop is analogous but in kotlin
         
@@ -49,7 +50,7 @@
     
 ## lambdas with receivers
 * the ability to call methods of a different object in the body of a lambda
-* example (from standard library)
+* example (from standard library - look for others)
     * `apply` - calls the specified function `block` with `this` value as its receiver and returns 
     `this` value
         ```
@@ -58,7 +59,7 @@
             contract {
                 callsInPlace(block, InvocationKind.EXACTLY_ONCE)
             }
-            block()
+            block() // this.block()
             return this
         }
         ```
@@ -72,10 +73,6 @@
         }
         println(name) // Michal
         ```
-    * `T.run(block: T.() -> R)`
-        * calls the specified function `block` with `this` value as its receiver and returns its result
-    * `with(receiver: T, block: T.() -> R)`
-        * calls the specified function `block` with `receiver` as its receiver and returns its result
 * lambdas with receiver and extension functions
     * note that an extension function is, in a sense, a function with a receiver
         * `this` refers to the instance of the type the function is extending
@@ -105,6 +102,10 @@
             ```
             sign("Approved by: ", "Michal Tumilowicz")
             ```
+    * what is exactly `T.()`?
+        * `fun doSomethingWithInt(receiver: Int.() -> Unit)`
+        * how this is different from Regular lambda like `() -> Unit`?
+        * similar to extension function we could call: `5.receiver()`
 * therefore, a lambda with a receiver looks exactly the same as a regular lambda in the source code
 
 ## infix
